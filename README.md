@@ -24,3 +24,9 @@ To run the code snippets, navigate to the `src` directory and execute the desire
 cd src
 uv run text_to_tool_to_text.py
 ```
+
+Please refer to the slides for the general context and the AI background.
+
+## License
+
+This project is provided "as is" and it is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
