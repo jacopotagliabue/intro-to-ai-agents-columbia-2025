@@ -29,7 +29,7 @@ def run_agent(
     user_request: str,
     tools: dict,
     model: str,
-    max_iterations: int = 10
+    max_iterations: int = 10,
 ):
     # Convert tools to ToolInfo namedtuples
     tool_infos = [function_to_tool(tool_func) for tool_func in tools.values()]
@@ -40,7 +40,7 @@ def run_agent(
     # Initialize conversation context
     messages = [
         {"role": "system", "content": full_system_prompt},
-        {"role": "user", "content": user_request}
+        {"role": "user", "content": user_request},
     ]
 
     # Track which tools have been called
@@ -70,8 +70,12 @@ def run_agent(
             print(f"\nFinal Answer: {parsed.answer}")
 
             # Assert that both required tools have been called
-            assert "get_weather" in tools_called, f"Error: Cannot provide final answer without checking weather first! Tools called so far: {', '.join(tools_called)}"
-            assert "check_availability_activity" in tools_called, f"Error: Cannot provide final answer without checking availability first! Tools called so far: {', '.join(tools_called)}"
+            assert "get_weather" in tools_called, (
+                f"Error: Cannot provide final answer without checking weather first! Tools called so far: {', '.join(tools_called)}"
+            )
+            assert "check_availability_activity" in tools_called, (
+                f"Error: Cannot provide final answer without checking availability first! Tools called so far: {', '.join(tools_called)}"
+            )
 
             print("[Validation passed: Both weather and availability were checked]")
             return parsed.answer
@@ -84,7 +88,9 @@ def run_agent(
             # Check if tool exists
             if tool_name in tools:
                 # Parse parameters (simple comma-separated for now)
-                params = [p.strip() for p in params_str.split(',')] if params_str else []
+                params = (
+                    [p.strip() for p in params_str.split(",")] if params_str else []
+                )
                 # Execute tool
                 try:
                     tool_result = tools[tool_name](*params)
@@ -94,7 +100,12 @@ def run_agent(
                     tools_called.append(tool_name)
 
                     # Add tool result to messages
-                    messages.append({"role": "user", "content": f"Tool '{tool_name}' returned: {tool_result}"})
+                    messages.append(
+                        {
+                            "role": "user",
+                            "content": f"Tool '{tool_name}' returned: {tool_result}",
+                        }
+                    )
                 except Exception as e:
                     error_msg = f"Error executing tool '{tool_name}': {str(e)}"
                     print(error_msg)
@@ -107,9 +118,19 @@ def run_agent(
             # No tool call found, but also no answer
             # Check if reasoning was provided
             if not parsed.reasoning:
-                messages.append({"role": "user", "content": "Please provide your reasoning in <reasoning> tags, and either an <answer> or a <tool> call."})
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": "Please provide your reasoning in <reasoning> tags, and either an <answer> or a <tool> call.",
+                    }
+                )
             else:
-                messages.append({"role": "user", "content": "Please provide either an <answer> or a <tool> call based on your reasoning."})
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": "Please provide either an <answer> or a <tool> call based on your reasoning.",
+                    }
+                )
 
     print("\n\n!!! Maximum iterations reached without final answer !!!\n\n")
 
@@ -119,28 +140,32 @@ def run_agent(
 if __name__ == "__main__":
     import argparse
     from dotenv import load_dotenv
+
     # Load environment variables
     load_dotenv()
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description="Advanced ReAct agent with reasoning and multiple tools")
+    parser = argparse.ArgumentParser(
+        description="Advanced ReAct agent with reasoning and multiple tools"
+    )
     parser.add_argument(
-        "-q", "--question",
+        "-q",
+        "--question",
         type=str,
         default="what activity do you suggest to book if I travel to honolulu next week?",
-        help="User question for the travel agent"
+        help="User question for the travel agent",
     )
     parser.add_argument(
         "--max-iterations",
         type=int,
         default=10,
-        help="Maximum number of agent iterations (default: 10)"
+        help="Maximum number of agent iterations (default: 10)",
     )
     args = parser.parse_args()
 
     # Define available tools
     tools = {
         "get_weather": get_weather,
-        "check_availability_activity": check_availability_activity
+        "check_availability_activity": check_availability_activity,
     }
 
     # Run the agent
@@ -150,7 +175,7 @@ if __name__ == "__main__":
         user_request=args.question,
         tools=tools,
         model="claude-sonnet-4-5-20250929",
-        max_iterations=args.max_iterations
+        max_iterations=args.max_iterations,
     )
     # Print out what we got:
     print("\n=== Final Answer ===")

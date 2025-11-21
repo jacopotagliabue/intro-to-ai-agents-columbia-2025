@@ -5,6 +5,7 @@ from typing import NamedTuple, Callable, Optional
 
 class ToolInfo(NamedTuple):
     """Information about a tool extracted from a function."""
+
     name: str
     params: str
     docstring: str
@@ -12,6 +13,7 @@ class ToolInfo(NamedTuple):
 
 class ParsedResponse(NamedTuple):
     """Parsed response from the LLM."""
+
     answer: Optional[str]
     tool: Optional[str]
     params: Optional[str]
@@ -32,10 +34,12 @@ def function_to_tool(func: Callable) -> ToolInfo:
     """
     name = func.__name__
     sig = inspect.signature(func)
-    params = ", ".join([
-        f"{param_name}: {param.annotation.__name__ if param.annotation != inspect.Parameter.empty else 'any'}"
-        for param_name, param in sig.parameters.items()
-    ])
+    params = ", ".join(
+        [
+            f"{param_name}: {param.annotation.__name__ if param.annotation != inspect.Parameter.empty else 'any'}"
+            for param_name, param in sig.parameters.items()
+        ]
+    )
     docstring = inspect.getdoc(func) or "No description available"
 
     return ToolInfo(name=name, params=params, docstring=docstring)
@@ -59,7 +63,9 @@ def add_tools_to_prompt(system_prompt: str, tool_infos: list[ToolInfo]) -> str:
 
     tools_description = "\n\nAvailable Tools:\n"
     for tool_info in tool_infos:
-        tools_description += f"- {tool_info.name}({tool_info.params}): {tool_info.docstring}\n"
+        tools_description += (
+            f"- {tool_info.name}({tool_info.params}): {tool_info.docstring}\n"
+        )
 
     return system_prompt + tools_description
 
@@ -84,22 +90,24 @@ def parse_response(response_text: str) -> ParsedResponse:
     reasoning = None
 
     # Check for reasoning
-    reasoning_match = re.search(r'<reasoning>(.*?)</reasoning>', response_text, re.DOTALL)
+    reasoning_match = re.search(
+        r"<reasoning>(.*?)</reasoning>", response_text, re.DOTALL
+    )
     if reasoning_match:
         reasoning = reasoning_match.group(1).strip()
 
     # Check for answer
-    answer_match = re.search(r'<answer>(.*?)</answer>', response_text, re.DOTALL)
+    answer_match = re.search(r"<answer>(.*?)</answer>", response_text, re.DOTALL)
     if answer_match:
         answer = answer_match.group(1).strip()
 
     # Check for tool call
-    tool_match = re.search(r'<tool>(.*?)</tool>', response_text)
+    tool_match = re.search(r"<tool>(.*?)</tool>", response_text)
     if tool_match:
         tool = tool_match.group(1).strip()
 
         # Check for parameters
-        params_match = re.search(r'<parameters>(.*?)</parameters>', response_text)
+        params_match = re.search(r"<parameters>(.*?)</parameters>", response_text)
         if params_match:
             params = params_match.group(1).strip()
 

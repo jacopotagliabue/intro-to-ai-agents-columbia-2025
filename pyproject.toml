@@ -5,6 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "fastmcp>=2.13.1",
     "litellm>=1.80.0",
     "python-dotenv>=1.2.1",
+    "smolagents[mcp]>=1.23.0",
 ]

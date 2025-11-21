@@ -25,7 +25,9 @@ cd src
 uv run text_to_tool_to_text.py
 ```
 
-Please refer to the slides for the general context and the AI background.
+Please refer to the slides for the general context and the AI background. The code has been developed for educational purposes only, using Claude Code as an AI assistant throughout the development process.
+
+A standalone [Fast MCP server](https://gofastmcp.com/getting-started/welcome) can be found in the `fast_mcp` directory, to showcase how to build and leverage a minimal server inside of an agentic loop.
 
 ## License
 
