@@ -15,6 +15,7 @@ class ParsedResponse(NamedTuple):
     answer: Optional[str]
     tool: Optional[str]
     params: Optional[str]
+    reasoning: Optional[str] = None
 
 
 def function_to_tool(func: Callable) -> ToolInfo:
@@ -69,16 +70,23 @@ def parse_response(response_text: str) -> ParsedResponse:
     Extracts either:
     - A final answer between <answer></answer> tags
     - A tool call with <tool></tool> and <parameters></parameters> tags
+    - Reasoning between <reasoning></reasoning> tags
 
     Args:
         response_text: The raw response from the LLM
 
     Returns:
-        ParsedResponse with answer, tool, and params (all optional)
+        ParsedResponse with answer, tool, params, and reasoning (all optional)
     """
     answer = None
     tool = None
     params = None
+    reasoning = None
+
+    # Check for reasoning
+    reasoning_match = re.search(r'<reasoning>(.*?)</reasoning>', response_text, re.DOTALL)
+    if reasoning_match:
+        reasoning = reasoning_match.group(1).strip()
 
     # Check for answer
     answer_match = re.search(r'<answer>(.*?)</answer>', response_text, re.DOTALL)
@@ -95,4 +103,4 @@ def parse_response(response_text: str) -> ParsedResponse:
         if params_match:
             params = params_match.group(1).strip()
 
-    return ParsedResponse(answer=answer, tool=tool, params=params)
+    return ParsedResponse(answer=answer, tool=tool, params=params, reasoning=reasoning)

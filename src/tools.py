@@ -13,3 +13,10 @@ def get_weather(location: str) -> str:
     Parameters: location (string) - the city or location to get weather for.
     Returns the current temperature and conditions."""
     return "80 degrees fahrenheit, clear skies"
+
+
+def check_availability_activity(activity: str) -> str:
+    """Tool to check availability for a specific activity.
+    Parameters: activity (string) - the activity to check availability for (e.g., tennis, padel, soccer, scuba lesson, yoga lesson, cooking class).
+    Returns the availability information for the requested activity."""
+    return f"{activity} is available at 3PM next Thursday"

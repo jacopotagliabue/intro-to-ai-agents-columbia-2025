@@ -57,21 +57,15 @@ def run_two_step_agent(
 
     # Parse the response
     parsed = parse_response(assistant_message)
-
-    # Expect a tool call, error if we get an answer instead
-    if parsed.answer:
-        raise ValueError("Expected tool call but got direct answer. This breaks the two-step pattern!")
-
-    if not parsed.tool:
-        raise ValueError("No tool call found in LLM response!")
+    
+    # Make sure we have a tool call
+    assert parsed.tool is not None and parsed.answer is None, "Expected a tool call in the first step."
 
     # Step 2: Execute tool
     print("\n=== Step 2: Execute Tool ===")
     tool_name = parsed.tool
-    params_str = parsed.params or ""
-
-    if tool_name not in tools:
-        raise ValueError(f"Tool '{tool_name}' not found. Available: {', '.join(tools.keys())}")
+    params_str = parsed.params or ""    
+    assert tool_name in tools, f"Tool '{tool_name}' not found. Available: {', '.join(tools.keys())}"
 
     # Parse parameters and execute tool
     params = [p.strip() for p in params_str.split(',')] if params_str else []
@@ -89,9 +83,7 @@ def run_two_step_agent(
 
     # Parse final answer
     parsed_final = parse_response(assistant_message)
-
-    if not parsed_final.answer:
-        raise ValueError("Expected final answer but didn't get one!")
+    assert parsed_final.answer is not None, "Expected a final answer in the last step."
 
     return parsed_final.answer
 
