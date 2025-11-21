@@ -43,6 +43,9 @@ def run_agent(
         {"role": "user", "content": user_request}
     ]
 
+    # Track which tools have been called
+    tools_called = []
+
     # Main agent loop
     for iteration in range(max_iterations):
         # Call LLM
@@ -62,9 +65,15 @@ def run_agent(
         if parsed.reasoning:
             print(f"\nReasoning: {parsed.reasoning}")
 
-        # Check if we have a final answer - if so we return early
+        # Check if we have a final answer - if so we validate and return
         if parsed.answer:
             print(f"\nFinal Answer: {parsed.answer}")
+
+            # Assert that both required tools have been called
+            assert "get_weather" in tools_called, f"Error: Cannot provide final answer without checking weather first! Tools called so far: {', '.join(tools_called)}"
+            assert "check_availability_activity" in tools_called, f"Error: Cannot provide final answer without checking availability first! Tools called so far: {', '.join(tools_called)}"
+
+            print("[Validation passed: Both weather and availability were checked]")
             return parsed.answer
 
         # Check if we have a tool call
@@ -80,6 +89,10 @@ def run_agent(
                 try:
                     tool_result = tools[tool_name](*params)
                     print(f"Tool Result: {tool_result}")
+
+                    # Track that this tool was called
+                    tools_called.append(tool_name)
+
                     # Add tool result to messages
                     messages.append({"role": "user", "content": f"Tool '{tool_name}' returned: {tool_result}"})
                 except Exception as e:
