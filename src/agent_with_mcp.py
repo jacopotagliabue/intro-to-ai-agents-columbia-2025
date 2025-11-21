@@ -7,8 +7,7 @@ showcasing a production-ready approach to extending agent capabilities with cust
 Key concepts:
 1. MCP (Model Context Protocol): Standard protocol for exposing tools to LLM agents
 2. smolagents: High-level framework that handles the ReAct loop automatically
-3. LiteLLM: Unified interface for calling different LLM providers
-4. Structured outputs: MCP tools can return Pydantic models for type-safe responses
+3. Structured outputs: MCP tools can return Pydantic models for type-safe responses
 
 The agent automatically:
 1. Discovers available tools from the MCP server

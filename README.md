@@ -3,7 +3,6 @@
 ## Overview
 This repo contains code snippets used for my 2025 lecture at Columbia University, an introduction to AI Agents (slides TBA) titled: "From LLMs to agents: The road to autonomy is paved with good intentions".
 
-
 ## Setup
 
 ### Python
@@ -27,7 +26,7 @@ uv run text_to_tool_to_text.py
 
 Please refer to the slides for the general context and the AI background. The code has been developed for educational purposes only, using Claude Code as an AI assistant throughout the development process.
 
-A standalone [Fast MCP server](https://gofastmcp.com/getting-started/welcome) can be found in the `fast_mcp` directory, to showcase how to build and leverage a minimal server inside of an agentic loop.
+A standalone [Fast MCP server](https://gofastmcp.com/getting-started/welcome) can be found in the `fast_mcp` directory, to showcase how to build and leverage a minimal server inside of an agentic loop: the server gets automatically called from the `agent_with_mcp.py` script, but could also be run in a standalone fashion.
 
 ## License
 
