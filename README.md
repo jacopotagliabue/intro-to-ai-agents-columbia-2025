@@ -1,7 +1,7 @@
 # Introduction to AI agents (Columbia University 2025)
 
 ## Overview
-This repo contains code snippets used for my 2025 lecture at Columbia University, an introduction to AI Agents (slides TBA) titled: "From LLMs to agents: The road to autonomy is paved with good intentions".
+This repo contains code snippets used for my 2025 lecture at Columbia University, an introduction to AI Agents ([slides here](https://jacopotagliabue.it/public/Columbia_Slides_nov_2025.pdf)) titled: "From LLMs to agents: The road to autonomy is paved with good intentions".
 
 ## Setup
 
@@ -13,7 +13,7 @@ uv sync
 ```
 
 ### LLM
-We use Anthropic APIs for the LLM backend. Make sure to create a `.env` file in `src` directory using `local.env` as a template. If you prefer to use other models, we rely on [LiteLLM](https://github.com/BerriAI/litellm) interface, so it should be straightforward to swap out the model backend.
+We use Anthropic APIs for the LLM backend. Make sure to create a `.env` file in `src` directory using `local.env` as a template. If you prefer to use other models, we rely on [LiteLLM](https://github.com/BerriAI/litellm) interface, so it should be straightforward to swap out the model backend. Make sure to change both the `.env` and the LLM init accordingly.
 
 ## Running the code
 
